@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>GanDollar</title>
+
+  <style>
+    body{
+      background-color:white;
+      margin:15px;
+    }
+    .select-currency{
+      margin-top:50px;
+    }
+    .conversion.mdc-elevation--z3{
+      margin-top:25px;
+      margin-bottom:25px;
+      margin-left:0px;
+      margin-right:0px;
+    }
+    .btn {
+  display: block;
+  width: 100%;
+  border: none;
+  background-color: #4CAF50;
+  padding: 14px 28px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+}
+
+
+  </style>
+
+</head>
+<body>
+
+  <h2>GanDollar</h2>
+
+  <div class="select-currency select">
+      <select class="select-text">
+        <option disabled selected>Select Currency</option>
+        <option value="USD">US Dollars</option>
+		<option value="KES">Kenyan Shillings</option>
+		<option value="UGX">Ugandan Shillings</option>
+		<option value="GHS">Ghanian Cedi</option>
+      </select>
+      <span class="select-highlight"></span>
+      <span class="select-bar"></span>
+      <label class="select-label">Currencies</label>
+    </div>
+  <button class ="btn" onclick="convert()">convert</button>
+  <div class="conversion mdc-elevation--z3">
+  </div>
+
+  <script>
+      // kindly do not change the var declarations to const or let
+
+      var currencies = ['USD', 'KES', 'GHS', 'UGX'];
+      var conversionAPI = from =>
+        `https://free.currencyconverterapi.com/api/v6/convert?q=${from}_NGN&compact=y`;
+    	fetch('https://free.currencyconverterapi.com/api/v6/convert?q=${from}_NGN&compact=y')
+    	.then(displayConversion()
+
+         )
+        .catch(displayConversion()
+
+
+         );
+
+
+      var displayConversion = conversion => {
+        const [entry] = Object.values(conversion);
+        const value = Number.parseFloat(entry.val).toFixed(2);
+        document.querySelector('.conversion').textContent = `${value} Naira`;
+
+        const btn = document.querySelector('.btn');
+        btn.removeAttribute('disabled');
+      };
+
+      var getSelectedCurrency = () => {
+        const currency = document.querySelector('select.select-text').value;
+        if(!currencies.includes(currency)) return undefined;
+
+        return currency;
+      };
+
+      var convert = (event) => {
+        const currency = getSelectedCurrency();
+
+        if(!currency) return;
+
+        const btn = event.target;
+        btn.setAttribute('disabled', 'disabled');
+
+        const url = conversionAPI(currency);
+
+        // use the fetch API to make an API request to the URL
+        // declared on the line above
+
+      };
+
+      var startApp = () => {
+        const btn = document.querySelector('button.btn');
+        if(!btn) return;
+
+        btn.addEventListener('click', convert);
+      };
+
+      startApp();
+  </script>
+</body>
+</html>
